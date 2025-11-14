@@ -164,14 +164,14 @@ def _tensor_sum(t: Tensor) -> Tensor:
 
     return Tensor(data=data, requires_grad=req_grad, depends_on=depends_on)
 
-def _tensor_log(t: Tensor) -> Tensor:
-    "TODO: tensor log"
-    data = np.log(t.data)
+def _tensor_log(t: Tensor, base=10) -> Tensor:
+    """TODO: tensor log"""
+    data = np.log(t.data) / np.log(base)
     req_grad = t.requires_grad
 
     if req_grad:
         def grad_fn(grad: np.ndarray):
-            return None
+            return grad / (t.data*np.log(base))
 
         depends_on = [Dependency(t, grad_fn)]
 
