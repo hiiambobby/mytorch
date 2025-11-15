@@ -12,6 +12,5 @@ def softmax(x: Tensor) -> Tensor:
     hint: a/b = a*(b^-1)
     """
     exp_x = x.exp()
-    ones = Tensor(np.ones((exp_x.shape[-1], 1)))   # ← باید Tensor باشد
-    s = exp_x @ ones
+    s = exp_x @ (np.ones((exp_x.shape[-1], 1)))
     return exp_x * (s ** -1)
