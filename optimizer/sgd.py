@@ -1,6 +1,6 @@
 from typing import List
-from layer import Layer
-from optimizer import Optimizer
+from mytorch.layer import Layer
+from mytorch.optimizer import Optimizer
 
 class SGD(Optimizer):
     def __init__(self, layers:List[Layer], learning_rate=0.1):
