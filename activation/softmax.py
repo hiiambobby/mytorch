@@ -11,6 +11,18 @@ def softmax(x: Tensor) -> Tensor:
         2. using matrix mul to do it :) (recommended)
     hint: a/b = a*(b^-1)
     """
-    exp_x = x.exp()
-    s = exp_x @ (np.ones((exp_x.shape[-1], 1)))
-    return exp_x * (s ** -1)
+    
+    x_exp = x.exp()
+    sum_ = x_exp @ Tensor(np.ones((x_exp.shape[-1], 1)))
+    out = x_exp * (sum_ ** -1)
+
+    if x.requires_grad:
+        def grad_fn(grad: np.ndarray):
+            s = out.data
+            jacobian = np.diagflat(s) - s @ s.T
+            return grad @ jacobian
+        depends_on = [Dependency(x, grad_fn)]
+    else:
+        depends_on = []
+
+    return Tensor(out.data, requires_grad=x.requires_grad, depends_on=depends_on)
