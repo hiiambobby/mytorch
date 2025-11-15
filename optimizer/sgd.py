@@ -8,5 +8,7 @@ class SGD(Optimizer):
         self.learning_rate = learning_rate
 
     def step(self):
-        "TODO: implement SGD algorithm"
-        pass
+        for layer in self.layers:
+            layer.weight.data -= layer.weight.grad.data * self.learning_rate
+            if layer.need_bias:
+                layer.bias.data -= layer.bias.grad.data * self.learning_rate
