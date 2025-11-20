@@ -8,7 +8,7 @@ def leaky_relu(x: Tensor) -> Tensor:
     hint: use np.where like Relu method but for LeakyRelu
     """
 
-    alpha = 1e-4
+    alpha = 0.01
     data = np.where(x.data < 0, alpha * x.data, x.data)
     req_grad = x.requires_grad
 
