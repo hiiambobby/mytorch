@@ -1,5 +1,5 @@
-# import numpy as np
-# from mytorch import Tensor, Dependency
+import numpy as np
+from mytorch import Tensor, Dependency
 
 # def tanh(x: Tensor) -> Tensor:
 #     """
