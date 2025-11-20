@@ -7,15 +7,23 @@ def sigmoid(x: Tensor) -> Tensor:
     hint: you can do it using function you've implemented (not directly define grad func)
     """
     
-    # This automatically creates all necessary intermediate Tensor objects 
-    # and their Dependencies.
-    sigmoid_result = Tensor(1.0) / (Tensor(1.0) + (-x).exp())
+    """
+    FIXED: implement sigmoid function using power rule to avoid division error.
+    """
+    # Step 1: Calculate the denominator (1 + e^-x)
+    denominator = Tensor(1.0) + (-x).exp()
+
+    # CRITICAL FIX: Rewrite 1 / Denominator as Denominator ** -1.0
+    sigmoid_result = denominator ** Tensor(-1.0)
+    
+    # --- Backward Pass (injecting the correct gradient) ---
     if x.requires_grad:
-            def grad_fn(grad: np.ndarray):
-                s = sigmoid_result.data
-                return grad * s * (1 - s)
-            
-            depends_on = [Dependency(x, grad_fn)]
+        def grad_fn(grad: np.ndarray):
+            # Derivative: s * (1 - s)
+            s = sigmoid_result.data
+            return grad * s * (1 - s)
+        
+        depends_on = [Dependency(x, grad_fn)]
     else:
         depends_on = []
 
