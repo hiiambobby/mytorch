@@ -26,17 +26,34 @@ from mytorch import Tensor, Dependency
 
 # Tanh Fix (similar to Sigmoid fix, avoiding / and Tensor arguments to **):
 def tanh(x: Tensor) -> Tensor:
+    """
+    Implements the Hyperbolic Tangent (Tanh) activation function.
+    Uses the power rule to ensure numerical stability by avoiding direct division.
+    """
+    # Calculate components: e^x and e^(-x)
     e_x = x.exp()
     e_minus_x = (-x).exp()
-    
-    numerator = e_x - e_minus_x  # Tensor - Tensor (Assumes implemented)
-    denominator = e_x + e_minus_x # Tensor + Tensor (Assumes implemented)
-    
-    # CRITICAL FIX: Use power rule to avoid division TypeError
-    denominator_inv = denominator ** (-1.0) # Power with float argument
-    tanh_result = numerator * denominator_inv # Multiplication
-    
-    # ... manual backward pass ...
-    # grad_fn: (1 - tanh^2) * grad
-    s = tanh_result.data
-    return grad * (1 - s**2)
+
+    # Calculate Numerator and Denominator
+    numerator = e_x - e_minus_x
+    denominator = e_x + e_minus_x
+
+    # CRITICAL FIX: Rewrite division (A / B) using multiplication and power (A * B^-1)
+    # This avoids the explicit TypeError for 'Tensor / Tensor'.
+    denominator_inv = denominator ** (-1.0)
+    tanh_result = numerator * denominator_inv
+
+    if x.requires_grad:
+        # The Tanh derivative is d(tanh(x))/dx = 1 - tanh^2(x).
+        def grad_fn(grad: np.ndarray): 
+            # 's' is the forward result (tanh(x))
+            s = tanh_result.data
+            # Apply the chain rule: incoming_grad * local_derivative
+            # The local derivative is (1 - s^2)
+            return grad * (1 - s**2)
+
+        depends_on = [Dependency(x, grad_fn)]
+    else:
+        depends_on = []
+
+    return Tensor(data=tanh_result.data, requires_grad=x.requires_grad, depends_on=depends_on)
