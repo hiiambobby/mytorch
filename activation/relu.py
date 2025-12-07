@@ -1,5 +1,5 @@
 from mytorch import Tensor, Dependency
-from mytorch.layer import Layer #this is added to relu for cnn
+from mytorch.layer import Layer
 import numpy as np
 
 class ReLU(Layer):
@@ -14,7 +14,8 @@ class ReLU(Layer):
         
         if req_grad:
             def grad_fn(grad: np.ndarray):
-
+                # همان منطق گرادیان شما: np.where
+                # گرادیان را فقط از جایی عبور بده که ورودی مثبت بوده
                 return np.where(x.data > 0, grad, 0)
             
             depends_on.append(Dependency(x, grad_fn))
