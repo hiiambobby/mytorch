@@ -1,5 +1,6 @@
 import numpy as np
-from mytorch import Tensor, Dependency
+from mytorch.tensor import Tensor, Dependency
+
 
 def flatten(x: Tensor) -> Tensor:
     """
