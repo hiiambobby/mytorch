@@ -19,7 +19,7 @@ class Conv2d(Layer):
         self.initialize()
 #########TO DOs###########
     def initialize(self):
-        
+
         self.weight = Tensor(
             data=initializer((self.out_channels, self.in_channels, *self.kernel_size), mode=self.initialize_mode),
             requires_grad=True
