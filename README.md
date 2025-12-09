@@ -25,18 +25,13 @@ It allows you to build, train, and evaluate complex neural networks (including C
 
 ## 🚀 Features
 
-* **🧠 Autograd Engine:** Automatic gradient calculation using a DAG (Directed Acyclic Graph) for tensors.
-* **🏗️ Modular Layers:**
-    * `Linear` (Dense)
-    * `Conv2d` (Convolution with `im2col` optimization)
-    * `MaxPool2d` & `AvgPool2d`
-    * `Flatten`
-    * `ReLU` & Activations
-* **📉 Optimizers:** Stochastic Gradient Descent (`SGD`) with support for learning rate decay.
-* **📊 Loss Functions:** CrossEntropyLoss with Softmax stability.
-* **🛠️ Utilities:**
-    * Custom `DataLoader` handling.
-    * Weight Initializers (`Xavier`, `He`, `Random Normal`).
+* **🧠 Autograd Engine:** Automatic gradient calculation (`tensor.py`) using a DAG for reverse-mode differentiation.
+* **🏗️ Modular Architecture:**
+    * **Layers:** `Linear`, `Conv2d` (with `im2col`), `MaxPool2d`, `AvgPool2d`.
+    * **Activations:** Dedicated module for `ReLU`, `Sigmoid`, etc.
+    * **Losses:** Modular loss functions like `CrossEntropyLoss`.
+* **📉 Optimizers:** Stochastic Gradient Descent (`SGD`) with learning rate scheduling support.
+* **🛠️ Utilities:** Custom `DataLoader` for handling binary datasets (like STL-10) and `Initializers` (Xavier, He).
 
 ---
 
