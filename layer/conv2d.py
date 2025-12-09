@@ -1,6 +1,8 @@
 from mytorch import Tensor, Dependency
 from mytorch.layer import Layer
 import numpy as np
+from mytorch.util.initializer import initializer 
+
 
 class Conv2d(Layer):
     def __init__(self, in_channels, out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), need_bias: bool = True, mode="xavier") -> None:
@@ -16,18 +18,18 @@ class Conv2d(Layer):
 
         self.initialize()
 #########TO DOs###########
-
     def initialize(self):
-        # Xavier Initialization
-        fan_in = self.in_channels * self.kernel_size[0] * self.kernel_size[1]
-        fan_out = self.out_channels * self.kernel_size[0] * self.kernel_size[1]
-        limit = np.sqrt(6 / (fan_in + fan_out))
         
-        w_data = np.random.uniform(-limit, limit, (self.out_channels, self.in_channels, *self.kernel_size))
-        self.weight = Tensor(data=w_data, requires_grad=True)
+        self.weight = Tensor(
+            data=initializer((self.out_channels, self.in_channels, *self.kernel_size), mode=self.initialize_mode),
+            requires_grad=True
+        )
 
         if self.need_bias:
-            self.bias = Tensor(data=np.zeros((self.out_channels, 1)), requires_grad=True)
+            self.bias = Tensor(
+                data=initializer((self.out_channels, 1), mode="zero"),
+                requires_grad=True
+        )
 
     def forward(self, x: Tensor) -> Tensor:
         # X shape: (N, C, H, W)
